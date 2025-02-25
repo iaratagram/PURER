@@ -1,44 +1,40 @@
 import streamlit as st
-import time
+from openai import OpenAI
 
-# 🎯 Streamed response generator (Echo模式)
-def response_generator(user_input):
-    for word in user_input.split():
-        yield word + " "
-        time.sleep(0.05)  # 模拟流式生成的延迟
+st.title("ChatGPT-like clone")
 
-# 🎯 初始化聊天记录
+# Set OpenAI API key from Streamlit secrets
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+# Set a default model
+if "openai_model" not in st.session_state:
+    st.session_state["openai_model"] = "gpt-3.5-turbo"
+
+# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 🎯 Streamlit UI
-st.set_page_config(page_title="Streaming Chatbot", page_icon="💬", layout="centered")
-
-st.title("💬 Streaming Echo Chatbot")
-st.write("Send a message and I'll respond word by word!")
-
-# 🎯 显示聊天历史
+# Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 🎯 用户输入
-if prompt := st.chat_input("Type a message..."):
-    # 1️⃣ 记录用户输入
+# Accept user input
+if prompt := st.chat_input("What is up?"):
+    # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
-    # 2️⃣ 显示用户输入
+    # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
-
-    # 3️⃣ 生成流式 AI 回复
+    # Display assistant response in chat message container
     with st.chat_message("assistant"):
-        response = st.write_stream(response_generator(prompt))  # Echo 逻辑（流式）
-
-    # 4️⃣ 记录 AI 回复
+        stream = client.chat.completions.create(
+            model=st.session_state["openai_model"],
+            messages=[
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages
+            ],
+            stream=True,
+        )
+        response = st.write_stream(stream)
     st.session_state.messages.append({"role": "assistant", "content": response})
-
-# 🎯 Reset 按钮
-if st.button("Reset Chat"):
-    st.session_state.messages = []  # 清空聊天记录
-    st.experimental_rerun()  # 重新运行，刷新 UI
