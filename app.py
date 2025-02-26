@@ -28,9 +28,9 @@ for message in st.session_state.messages:
 
 
 if st.session_state.lock_chat:
-    st.chat_input("AI is responding...", disabled=True)  # **锁定输入**
+    user_input = st.chat_input("AI is responding...", disabled=True)  # **锁定输入**
 else:
-    user_input = st.chat_input("Type your message:")
+    user_input = st.chat_input("Type your message:", disabled=False)
 
 # Accept user input
 if user_input:
