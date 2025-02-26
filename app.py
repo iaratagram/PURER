@@ -5,7 +5,7 @@ st.title("PURER AI v1013")
 
 # Set OpenAI API key from Streamlit secrets
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-irister_key = st.secrets["IRISTER_API_KEY"]
+# irister_key = st.secrets["IRISTER_API_KEY"]
 
 
 
