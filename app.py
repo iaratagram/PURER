@@ -35,11 +35,15 @@ else:
 if user_input:
     # 锁定输入，防止重复输入
     st.session_state["lock_chat"] = True
+    
 
     # 记录并显示用户输入
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
+
+    # rerun to refresh ui
+    st.rerun()
 
     # 生成 AI 回复（流式输出）
     with st.chat_message("assistant"):
