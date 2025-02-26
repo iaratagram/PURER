@@ -45,17 +45,16 @@ if user_input:
     with st.chat_message("assistant"):
         stream = client.chat.completions.create(
             model=st.session_state["openai_model"],
-            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+            messages=[
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages
+            ],
             stream=True,
         )
-        response_text = ""
-        response_placeholder = st.empty()
-        for chunk in stream:
-            response_text += chunk  # 累计完整回复
-            response_placeholder.markdown(response_text)
+        response = st.write_stream(stream)
 
     # 记录 AI 回复
-    st.session_state.messages.append({"role": "assistant", "content": response_text})
+    st.session_state.messages.append({"role": "assistant", "content": response})
 
     # 解锁输入
     st.session_state.lock_chat = False
