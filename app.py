@@ -2,11 +2,11 @@ import streamlit as st
 from openai import OpenAI
 from irister_utils import request_irister
 
-st.title("PURER AI v0")
+st.title("mindfulness AI v0")
 
 with st.sidebar:
-    st.title("PURER AI")
-    st.caption("🚀 Mindfulness Purer AI Chatbot")
+    st.title("mindfulness AI")
+    st.caption("🚀 mindfulness AI chat")
 
 starting_msg = 'DEBUG: Current Node - [NODE 1: Best Experience]  \nHello and welcome to your mindfulness feedback session! Let\'s start by reflecting on your recent practice. Could you please share what you enjoyed most about your session?'
 
